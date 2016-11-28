@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use Doctrine\DBAL\Types\JsonArrayType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,7 +24,8 @@ class MethodController extends Controller
     }
 
     /**
-     * @Route("/post", name="post")
+     * @Route("/info/add", name="post")
+     * @Method({"POST"})
      */
     public function postAction()
     {
@@ -44,11 +46,12 @@ class MethodController extends Controller
         }
 
 
-        return JsonResponse::create($json);
+        return JsonResponse::create($_POST);
     }
 
     /**
-     * @Route("/get", name="getAll")
+     * @Route("/info", name="getAll")
+     * @Method({"GET"})
      */
     public function getAction()
     {
@@ -59,7 +62,8 @@ class MethodController extends Controller
     }
 
     /**
-     * @Route("/get/{id}", name="getId")
+     * @Route("/info/{id}", name="getId")
+     * @Method({"GET"})
      */
     public function getIdAction($id)
     {
@@ -77,12 +81,12 @@ class MethodController extends Controller
 
 
     /**
-     * @Route("/delete/{id}", name="delete")
+     * @Route("/info/{id}", name="delete")
+     * @Method({"DELETE"})
      */
     public function deleteAction($id){
         $records = file_get_contents(realpath($this->getParameter('kernel.root_dir')).'/Resources/json/file.json');
         $records = json_decode($records,true);
-        if ($_SERVER['REQUEST_METHOD'] == 'DELETE'){
             foreach ($records as $i => $record)
             {
                 if ($record['id'] == $id){
@@ -92,17 +96,16 @@ class MethodController extends Controller
                     break;
                 }
             }
-        }
         return new JsonResponse($record);
     }
 
     /**
-     * @Route("/put/{id}", name="put")
+     * @Route("/info/{id}", name="put")
+     * @Method({"PUT"})
      */
     public function putAction($id){
         $records = file_get_contents(realpath($this->getParameter('kernel.root_dir')).'/Resources/json/file.json');
         $records = json_decode($records,true);
-        if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
             $request = file_get_contents("php://input","r");
             parse_str($request,$input);
             foreach ($records as $i => $record)
@@ -116,7 +119,6 @@ class MethodController extends Controller
                     break;
                 }
             }
-        }
         return new JsonResponse($record);
     }
 }
