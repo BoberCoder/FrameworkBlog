@@ -44,7 +44,7 @@ class MethodController extends Controller
         }
 
 
-        return JsonResponse::create();
+        return JsonResponse::create($json);
     }
 
     /**
@@ -89,12 +89,11 @@ class MethodController extends Controller
                     unset ($records[$i]);
                     $records = json_encode($records);
                     file_put_contents(realpath($this->getParameter('kernel.root_dir')).'/Resources/json/file.json',$records);
-                    $data = 'Record successfully deleted';
                     break;
                 }
             }
         }
-        return new JsonResponse($data);
+        return new JsonResponse($record);
     }
 
     /**
@@ -106,7 +105,6 @@ class MethodController extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'PUT'){
             $request = file_get_contents("php://input","r");
             parse_str($request,$input);
-            print_r($input);
             foreach ($records as $i => $record)
             {
                 if ($record['id'] == $id){
@@ -115,11 +113,10 @@ class MethodController extends Controller
                     $records[$i] = $record;
                     $records = json_encode($records);
                     file_put_contents(realpath($this->getParameter('kernel.root_dir')).'/Resources/json/file.json',$records);
-                    $data = 'Record successfully rewrite';
                     break;
                 }
             }
         }
-        return new JsonResponse($data);
+        return new JsonResponse($record);
     }
 }
